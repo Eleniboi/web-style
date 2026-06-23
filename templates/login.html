@@ -8,14 +8,19 @@
 
 <body>
     <h4>logic Your Account</h4>
+
+    <form method="post" action="/page">
     <label for="email" >Enter registered email: </label><br>
 
     <input id="email" placeholder="enter email address..." name="comfirm_pass"><br><br>
+    <pre>{{.valid}}</pre>
 
     <label for="PassW" >Enter valid password: </label><br>
 
     <input id="email" placeholder="password..." name="comfirm_email"><br><br>
-
+   <pre>{{.valid}}</pre>
+   <a href="/page" ><button type="submit">submit</button></a>
+</form>
 </body>
 
 </html>

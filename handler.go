@@ -40,9 +40,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+type Validate struct {
+	Wrg_passWord string
+	Wrg_email    string
+}
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	password := r.FormValue("passord")
+
 	email := r.FormValue("email")
 
 	UserInfo[password] = email
@@ -60,4 +66,44 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+
+	valid := Validate{
+		Wrg_passWord: "",
+		Wrg_email:    "",
+	}
+
+	comfirm_Password := r.FormValue("comfirm_pass")
+	comfirm_Email := r.FormValue("comfirm_Email")
+
+	_, ok := UserInfo[comfirm_Email]
+
+	if !ok {
+
+		valid = Validate{
+			Wrg_passWord: "",
+			Wrg_email:    "invalid email address..",
+		}
+		tmpl.Execute(w, valid)
+		return
+	}
+
+	_, checked := UserInfo[comfirm_Password]
+
+	if !checked {
+
+		valid = Validate{
+			Wrg_passWord: "invalid password Enter a correct one",
+			Wrg_email:    "",
+		}
+		tmpl.Execute(w, valid)
+		return
+	}
+
+}
+
+func pageHandler(w http.ResponseWriter, r *http.Request) {
+
+	tmpl := template.Must(template.ParseFiles("templates/page.html"))
+
+	tmpl.Execute(w, nil)
 }

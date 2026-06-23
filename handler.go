@@ -3,12 +3,13 @@ package main
 import (
 	"html/template"
 	"net/http"
-	"strings"
 )
 
 type RegDetail struct {
 	Email string
 }
+
+var UserInfo = map[string]string{}
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -26,20 +27,25 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var Reg_email = r.FormValue("email")
+	// var Reg_email = r.FormValue("email")
 
-	if Reg_email == "" || !strings.HasSuffix(Reg_email, `@gmail.com`) {
+	// if Reg_email == "" || !strings.HasSuffix(Reg_email, `@gmail.com`) {
 
-		Data := RegDetail{
-			Email: "Address must end with '@gmail.com'",
-		}
+	// 	Data := RegDetail{
+	// 		Email: "Address must end with '@gmail.com'",
+	// 	}
 
-		tmpl.Execute(w, Data)
-	}
+	// 	tmpl.Execute(w, Data)
+	// }
 
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+
+	password := r.FormValue("passord")
+	email := r.FormValue("email")
+
+	UserInfo[password] = email
 
 	var tmpl = template.Must(template.ParseFiles("templates/login.html"))
 

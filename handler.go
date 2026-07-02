@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -27,17 +28,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var Reg_email = r.FormValue("email")
-
-	// if Reg_email == "" || !strings.HasSuffix(Reg_email, `@gmail.com`) {
-
-	// 	Data := RegDetail{
-	// 		Email: "Address must end with '@gmail.com'",
-	// 	}
-
-	// 	tmpl.Execute(w, Data)
-	// }
-
 }
 
 type Validate struct {
@@ -47,9 +37,11 @@ type Validate struct {
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 
-	password := r.FormValue("passord")
+	password := r.FormValue("password")
 
 	email := r.FormValue("email")
+
+	fmt.Println(password)
 
 	UserInfo[password] = email
 
@@ -73,33 +65,14 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	comfirm_Password := r.FormValue("comfirm_pass")
-	comfirm_Email := r.FormValue("comfirm_Email")
-
-	_, ok := UserInfo[comfirm_Email]
-
-	if !ok {
-
-		valid = Validate{
-			Wrg_passWord: "",
-			Wrg_email:    "invalid email address..",
-		}
-		tmpl.Execute(w, valid)
-		return
-	}
-
-	_, checked := UserInfo[comfirm_Password]
-
-	if !checked {
-
-		valid = Validate{
-			Wrg_passWord: "invalid password Enter a correct one",
-			Wrg_email:    "",
-		}
-		tmpl.Execute(w, valid)
-		return
-	}
+	comfirm_Email := r.FormValue("comfirm_mmail")
+	//check for 
 
 }
+
+
+
+
 
 func pageHandler(w http.ResponseWriter, r *http.Request) {
 

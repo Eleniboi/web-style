@@ -12,6 +12,7 @@ func main() {
 	// http.Handle("/static/", http.StripPrefix("/static", fs))
 
 	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/register", registrationHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/page", pageHandler)
 	fmt.Println("server is now live on http://localhost:8080")

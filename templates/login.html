@@ -9,16 +9,16 @@
 <body>
     <h4>login Your Account</h4>
 
-    <form>
+    <form method="post" action="/login">
     <label for="email" >Enter registered email: </label><br>
 
     <input id="email" placeholder="enter email address..." name="comfirm_email"><br><br>
-    <pre>{{.valid}}</pre>
+   {{if .}}<pre>{{.Wrg_email}}</pre>{{end}}
 
     <label for="PassW" >Enter valid password: </label><br>
 
-    <input id="PassW" placeholder="password..." name="comfirm_pass"><br><br>
-   <pre>{{.valid}}</pre>
+    <input id="PassW" placeholder="password..." name="comfirm_password" type="password"><br><br>
+  {{if .}}<pre>{{.Wrg_passWord}}</pre>{{end}}
    <button type="submit">submit</button>
 </form>
 </body>

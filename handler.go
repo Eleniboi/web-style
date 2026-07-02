@@ -12,9 +12,9 @@ type RegDetail struct {
 
 var UserInfo = map[string]string{}
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+var tmpl = template.Must(template.ParseFiles("templates/index.html"))
 
-	var tmpl = template.Must(template.ParseFiles("templates/index.html"))
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodGet {
 		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
@@ -27,23 +27,16 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 }
 
-type Validate struct {
-	Wrg_passWord string
-	Wrg_email    string
-}
-
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func registrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	password := r.FormValue("password")
 
 	email := r.FormValue("email")
 
-	fmt.Println(password)
-
-	UserInfo[password] = email
+	UserInfo[email] = password
+	fmt.Println(UserInfo)
 
 	var tmpl = template.Must(template.ParseFiles("templates/login.html"))
 
@@ -58,23 +51,58 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	valid := Validate{
-		Wrg_passWord: "",
-		Wrg_email:    "",
-	}
-
-	comfirm_Password := r.FormValue("comfirm_pass")
-	comfirm_Email := r.FormValue("comfirm_mmail")
-	//check for 
-
 }
 
+type Validate struct {
+	Wrg_passWord string
+	Wrg_email    string
+}
 
+func loginHandler(w http.ResponseWriter, r *http.Request) {
 
+	if r.Method != http.MethodPost {
 
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	tmpl := template.Must(template.ParseFiles("templates/login.html"))
+
+	comfirm_email := r.FormValue("comfirm_email")
+	comfirm_password := r.FormValue("comfirm_password")
+
+	storedPassword, ok := UserInfo[comfirm_email]
+
+	switch {
+
+	case !ok:
+		data := Validate{
+
+			Wrg_email:    "incorrect email, enter a correct one!!!",
+			Wrg_passWord: "",
+		}
+		tmpl.Execute(w, data)
+		return
+	case storedPassword != comfirm_password:
+		data := Validate{
+
+			Wrg_email:    "",
+			Wrg_passWord: "incorrect password, enter a correct one!!!",
+		}
+		tmpl.Execute(w, data)
+		return
+	}
+
+	http.Redirect(w, r, "/page", http.StatusSeeOther)
+}
 
 func pageHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodGet {
+
+		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
 	tmpl := template.Must(template.ParseFiles("templates/page.html"))
 
